@@ -1,8 +1,8 @@
 {
   "name": "@page-libs/cutie",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Page plugin for using cutie library in browser.",
-  "main": "/out/index.js",
+  "main": "out/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "grunt"
