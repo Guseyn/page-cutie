@@ -2,7 +2,7 @@
 
 [![NPM Version][npm-image]][npm-url]
 
-Page plugin for using cutie library in browser.
+[Page](https://github.com/Guseyn/page) plugin for using cutie library in browser.
 
 For more information visit [cutie](https://github.com/Guseyn/cutie).
 
