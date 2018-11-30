@@ -1,6 +1,6 @@
 const { AsyncObject } = require('@cuties/cutie');
 const PageAsyncObject = require('./src/AsyncObject');
-const index = require('./src/index');
+const index = require('./out/index');
 
 // transform all async objects from @page-libs/cutie to @cuties/cutie for testing
 
