@@ -1,5 +1,7 @@
 'use strict';
 
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -7,8 +9,6 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 var AsyncTree = require('./AsyncTree');
-
-var Event = require('./Event');
 /* abstract class */
 
 
@@ -26,20 +26,20 @@ function () {
     }
 
     this.args = args;
-    this.next;
     this.cache = {};
-    this.asKey;
+    this.next = undefined;
+    this.asKey = undefined;
   } // TO BE OVERRIDDEN
 
 
   _createClass(AsyncObject, [{
-    key: "definedAsyncCall",
-    value: function definedAsyncCall() {
+    key: "asyncCall",
+    value: function asyncCall() {
       throw new Error('asyncCall or syncCall must be defined');
     }
   }, {
-    key: "definedSyncCall",
-    value: function definedSyncCall() {
+    key: "syncCall",
+    value: function syncCall() {
       throw new Error('asyncCall or syncCall must be defined');
     }
   }, {
@@ -52,7 +52,7 @@ function () {
     value: function onResult(result) {
       return result;
     }
-    /* 
+    /*
       Works only if this.continueAfterFail returns true
         (in that case this.onError and this.onResult will be ignored),
     */
@@ -62,10 +62,10 @@ function () {
     value: function onErrorAndResult(error, result) {
       return error || result;
     }
-    /* 
-      If it returns true, then this.onError and this.onResult will be ignored, 
+    /*
+      If it returns true, then this.onError and this.onResult will be ignored,
       and the represented result of this object
-        will be returned by this.onErrorAndResult.
+      will be returned by this.onErrorAndResult.
     */
 
   }, {
@@ -101,10 +101,10 @@ function () {
   }, {
     key: "iterateArgs",
     value: function iterateArgs(func) {
+      var _this = this;
+
       this.args.forEach(function (arg, index) {
-        var isAsync = arg instanceof AsyncObject;
-        var isEvent = arg instanceof Event;
-        func(arg, index, isAsync, isEvent);
+        func(arg, index, _this.isAsyncObject(arg), _this.isEvent(arg));
       });
     }
   }, {
@@ -128,12 +128,12 @@ function () {
   }, {
     key: "propagateCache",
     value: function propagateCache(arg) {
-      var _this = this;
+      var _this2 = this;
 
-      if (arg instanceof AsyncObject) {
+      if (this.isAsyncObject(arg)) {
         arg.withCache(this.cache);
         arg.iterateArgs(function (arg) {
-          return _this.propagateCache(arg);
+          return _this2.propagateCache(arg);
         });
       }
     }
@@ -151,6 +151,37 @@ function () {
       }
 
       return this;
+    }
+  }, {
+    key: "isAsyncObject",
+    value: function isAsyncObject(arg) {
+      return this.classChain(arg).indexOf('AsyncObject') !== -1;
+    }
+  }, {
+    key: "isEvent",
+    value: function isEvent(arg) {
+      return this.classChain(arg).indexOf('Event') !== -1;
+    }
+  }, {
+    key: "classChain",
+    value: function classChain(obj, chain) {
+      if (!chain) {
+        chain = [];
+      }
+
+      if (typeof obj === 'function') {
+        if (!obj.name || obj === Object) {
+          return chain;
+        }
+
+        return this.classChain(Object.getPrototypeOf(obj), chain.concat(obj.name));
+      }
+
+      if (_typeof(obj) === 'object' && obj !== null) {
+        return this.classChain(obj.constructor, chain);
+      }
+
+      return chain;
     }
   }]);
 

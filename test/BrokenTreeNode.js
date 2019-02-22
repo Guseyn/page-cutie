@@ -1,8 +1,8 @@
 'use strict'
 
-const TreeNode = require('./TreeNode')
+const TreeNode = require('./../src/TreeNode')
 
-class SimpleTreeNode extends TreeNode {
+class BrokenTreeNode extends TreeNode {
   /*
     field: simple argument (not AsyncObject, can be Event)
     parent: AsyncTreeNode or NotDefinedAsyncTree
@@ -11,16 +11,6 @@ class SimpleTreeNode extends TreeNode {
   constructor (field, parent, position) {
     super(field, parent, position)
   }
-
-  // PUBLIC
-
-  call () {
-    super.callParent(this.field)
-  }
-
-  isLeaf () {
-    return true
-  }
 }
 
-module.exports = SimpleTreeNode
+module.exports = BrokenTreeNode

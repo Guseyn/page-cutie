@@ -27,7 +27,8 @@ function () {
   _createClass(TreeNode, [{
     key: "call",
     value: function call(result) {
-      throw new Error('call must be overridden');
+      result = result || '';
+      throw new Error("call must be overridden and insert result ".concat(result, " into parent node"));
     }
   }, {
     key: "isLeaf",

@@ -32,8 +32,6 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 var TreeNode = require('./TreeNode');
 
-var NullError = require('./NullError');
-
 var AsyncTreeNode =
 /*#__PURE__*/
 function (_TreeNode) {
@@ -62,7 +60,7 @@ function (_TreeNode) {
       var args = this.argResults;
 
       try {
-        var asyncCall = this.field.definedAsyncCall();
+        var asyncCall = this.field.asyncCall();
 
         if (this.field.callbackWithError()) {
           this.invokeAsyncCallWithError.apply(this, [asyncCall].concat(_toConsumableArray(args)));
@@ -71,9 +69,13 @@ function (_TreeNode) {
         }
       } catch (error) {
         if (error.message !== 'asyncCall or syncCall must be defined') {
-          this.field.onError(error);
+          if (this.field.continueAfterFail()) {
+            this.field.onErrorAndResult(error);
+          } else {
+            this.field.onError(error);
+          }
         } else {
-          var syncCall = this.field.definedSyncCall();
+          var syncCall = this.field.syncCall();
           this.invokeSyncCall.apply(this, [syncCall].concat(_toConsumableArray(args)));
         }
       }
@@ -152,33 +154,24 @@ function (_TreeNode) {
       var isProcessed = false; // It's not possible to get rid of null here :(
 
       if (error != null) {
-        for (var _len5 = arguments.length, results = new Array(_len5 > 1 ? _len5 - 1 : 0), _key5 = 1; _key5 < _len5; _key5++) {
-          results[_key5 - 1] = arguments[_key5];
-        }
+        if (this.field.continueAfterFail()) {
+          var _this$field;
 
-        if (this.hasParent()) {
-          if (this.field.continueAfterFail()) {
-            var _this$field;
+          for (var _len5 = arguments.length, results = new Array(_len5 > 1 ? _len5 - 1 : 0), _key5 = 1; _key5 < _len5; _key5++) {
+            results[_key5 - 1] = arguments[_key5];
+          }
 
-            var totalResult = (_this$field = this.field).onErrorAndResult.apply(_this$field, [error].concat(results));
+          var totalResult = (_this$field = this.field).onErrorAndResult.apply(_this$field, [error].concat(results));
 
-            this.field.saveValueIntoCacheIfNeeded(totalResult);
+          this.field.saveValueIntoCacheIfNeeded(totalResult);
 
+          if (this.hasParent()) {
             _get(_getPrototypeOf(AsyncTreeNode.prototype), "callParent", this).call(this, totalResult);
           } else {
-            this.field.onError(error);
+            this.field.callNextTreeIfExists();
           }
         } else {
-          if (this.field.continueAfterFail()) {
-            var _this$field2;
-
-            var _totalResult = (_this$field2 = this.field).onErrorAndResult.apply(_this$field2, [error].concat(results));
-
-            this.field.saveValueIntoCacheIfNeeded(_totalResult);
-            this.field.callNextTreeIfExists();
-          } else {
-            this.field.onError(error);
-          }
+          this.field.onError(error);
         }
 
         isProcessed = true;
@@ -195,32 +188,21 @@ function (_TreeNode) {
         results[_key6] = arguments[_key6];
       }
 
+      if (this.field.continueAfterFail()) {
+        var _this$field2;
+
+        totalResult = (_this$field2 = this.field).onErrorAndResult.apply(_this$field2, [null].concat(results));
+      } else {
+        var _this$field3;
+
+        totalResult = (_this$field3 = this.field).onResult.apply(_this$field3, results);
+      }
+
+      this.field.saveValueIntoCacheIfNeeded(totalResult);
+
       if (this.hasParent()) {
-        if (this.field.continueAfterFail()) {
-          var _this$field3;
-
-          totalResult = (_this$field3 = this.field).onErrorAndResult.apply(_this$field3, [new NullError()].concat(results));
-        } else {
-          var _this$field4;
-
-          totalResult = (_this$field4 = this.field).onResult.apply(_this$field4, results);
-        }
-
-        this.field.saveValueIntoCacheIfNeeded(totalResult);
-
         _get(_getPrototypeOf(AsyncTreeNode.prototype), "callParent", this).call(this, totalResult);
       } else {
-        if (this.field.continueAfterFail()) {
-          var _this$field5;
-
-          totalResult = (_this$field5 = this.field).onErrorAndResult.apply(_this$field5, [new NullError()].concat(results));
-        } else {
-          var _this$field6;
-
-          totalResult = (_this$field6 = this.field).onResult.apply(_this$field6, results);
-        }
-
-        this.field.saveValueIntoCacheIfNeeded(totalResult);
         this.field.callNextTreeIfExists();
       }
 

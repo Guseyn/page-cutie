@@ -48,12 +48,12 @@ function () {
     value: function createChildNodes(field, parent) {
       var _this = this;
 
-      field.iterateArgs(function (argAsField, index, isAsync, isEvent) {
-        if (isAsync) {
+      field.iterateArgs(function (argAsField, index, isAsyncObject, isEvent) {
+        if (isAsyncObject) {
           _this.createAsyncTreeNode(argAsField, parent, index);
         } else if (isEvent) {
           _this.createSimpleTreeNode(function () {
-            argAsField.definedBody.apply(argAsField, arguments);
+            argAsField.body.apply(argAsField, arguments);
           }, parent, index);
         } else {
           _this.createSimpleTreeNode(argAsField, parent, index);
