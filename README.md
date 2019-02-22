@@ -10,12 +10,12 @@
 
 `npm install @page-libs/cutie`
 
-## Run build
-
-`npm run build`
-
 ## Run test
 
 `npm test`
+
+## Run build
+
+`npm run build`
 
 For more information visit [cutie](https://github.com/Guseyn/cutie).
