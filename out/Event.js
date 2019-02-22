@@ -15,9 +15,13 @@ function () {
 
 
   _createClass(Event, [{
-    key: "definedBody",
-    value: function definedBody() {
-      throw new Error('Method definedBody must be overriden with arguments of the event/eventListener you call');
+    key: "body",
+    value: function body() {
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      throw new Error("Method body must be overriden with arguments ".concat(args, " of the event/eventListener you call"));
     }
   }]);
 

@@ -1,16 +1,13 @@
-
 'use strict'
 
 class Event {
-
-  constructor() {}
+  constructor () {}
 
   // TO BE OVERRIDDEN
-  
-   definedBody(...args) {
-     throw new Error('Method definedBody must be overriden with arguments of the event/eventListener you call');
-    }
 
+  body (...args) {
+    throw new Error(`Method body must be overriden with arguments ${args} of the event/eventListener you call`)
+  }
 }
 
-module.exports = Event;
+module.exports = Event

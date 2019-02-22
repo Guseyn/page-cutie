@@ -32,14 +32,14 @@ function (_AsyncObject) {
   }
 
   _createClass(As, [{
-    key: "definedSyncCall",
-    value: function definedSyncCall() {
+    key: "syncCall",
+    value: function syncCall() {
       var _this = this;
 
       return function (key) {
         var result = _this.cache[key];
 
-        if (!result) {
+        if (result === undefined) {
           throw new Error("There is no value that is cached with key: ".concat(key));
         }
 
