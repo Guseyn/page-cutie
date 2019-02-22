@@ -1,6 +1,6 @@
 {
   "name": "@page-libs/cutie",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Page plugin for using cutie library in browser.",
   "main": "out/index.js",
   "scripts": {
