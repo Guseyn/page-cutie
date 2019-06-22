@@ -2,15 +2,15 @@
 
 var PageAsyncObject = require('./AsyncObject');
 
-module.exports = function () {
-  for (var _len = arguments.length, asyncObjects = new Array(_len), _key = 0; _key < _len; _key++) {
-    asyncObjects[_key] = arguments[_key];
-  }
+var _require = require('@cuties/cutie'),
+    AsyncObject = _require.AsyncObject;
 
-  for (var i = 0; i < asyncObjects.length; i++) {
-    if (asyncObjects[i].prototype instanceof PageAsyncObject) {
-      Object.setPrototypeOf(asyncObjects[i].prototype, PageAsyncObject.prototype);
-      Object.setPrototypeOf(asyncObjects[i], PageAsyncObject);
+module.exports = function (asyncObjects) {
+  Object.keys(asyncObjects).forEach(function (key) {
+    if (asyncObjects[key].prototype instanceof AsyncObject) {
+      Object.setPrototypeOf(asyncObjects[key].prototype, PageAsyncObject.prototype);
+      Object.setPrototypeOf(asyncObjects[key], PageAsyncObject);
     }
-  }
+  });
+  return asyncObjects;
 };

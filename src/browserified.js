@@ -1,10 +1,12 @@
 const PageAsyncObject = require('./AsyncObject')
+const { AsyncObject } = require('@cuties/cutie')
 
-module.exports = (...asyncObjects) => {
-  for (let i = 0; i < asyncObjects.length; i++) {
-    if (asyncObjects[i].prototype instanceof PageAsyncObject) {
-      Object.setPrototypeOf(asyncObjects[i].prototype, PageAsyncObject.prototype)
-      Object.setPrototypeOf(asyncObjects[i], PageAsyncObject)
+module.exports = (asyncObjects) => {
+  Object.keys(asyncObjects).forEach(key => {
+    if (asyncObjects[key].prototype instanceof AsyncObject) {
+      Object.setPrototypeOf(asyncObjects[key].prototype, PageAsyncObject.prototype)
+      Object.setPrototypeOf(asyncObjects[key], PageAsyncObject)
     }
-  }
+  })
+  return asyncObjects
 }
