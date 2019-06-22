@@ -2,8 +2,10 @@
 
 const assert = require('assert')
 const AsyncObject = require('./../src/AsyncObject')
+const CutieAsyncObject = require('@cuties/cutie').AsyncObject
 const Event = require('./../src/Event')
 const as = require('./../src/As')
+const browserified = require('./../src/browserified')
 const StrictEqualAssertion = require('./StrictEqualAssertion')
 const DeepStrictEqualAssertion = require('./DeepStrictEqualAssertion')
 const AsyncMaxNum = require('./AsyncMaxNum')
@@ -197,3 +199,15 @@ assert(new A().isEvent(new E()))
 assert(new A().isEvent(new D()))
 assert(new A().isEvent(new F()))
 assert(!new A().isEvent(new N()))
+
+class AO1 extends CutieAsyncObject {}
+class AO2 extends CutieAsyncObject {}
+class AO3 extends CutieAsyncObject {}
+class AO4 {}
+
+const browserifiedAsyncObjects = browserified({ AO1, AO2, AO3, AO4 })
+
+assert(browserifiedAsyncObjects.AO1.prototype instanceof AsyncObject)
+assert(browserifiedAsyncObjects.AO2.prototype instanceof AsyncObject)
+assert(browserifiedAsyncObjects.AO3.prototype instanceof AsyncObject)
+assert(browserifiedAsyncObjects.AO4.prototype instanceof Object)
